@@ -1,4 +1,4 @@
--- DDL BASE DE DATOS ZAPATERIA 
+-- DLL BASE DE DATOS ZAPATERIA 
 create database if not exists Zapateria;
 
 use Zapateria;
@@ -90,12 +90,12 @@ create table Pedidos(
 
 create table Categoria(
 	IdCategoria int primary key auto_increment,
-    Categoria enum('Deportivo', 'Casual', 'Niño', 'Niña', 'Masculino', 'Femenino') not null
+    Categoria enum('Deportivo', 'Casual Masculino', 'Casual Femenino','Niño', 'Niña', 'Masculino', 'Femenino','Formal Masculino', 'Formal Femenino','Sandalias') not null
 );
 
 create table Tipo_De_Material(
 	IdTipoDeMaterial int primary key auto_increment,
-    Material enum('Cuero', 'Cuero sintetico', 'Lienzo o Lona', 'Sinteticos', 'Textiles') not null
+    Material enum('Cuero', 'Cuero sintetico', 'Lienzo o Lona', 'Sinteticos', 'Textiles','Goma','Neopreno','Poliéster') not null
 );
 
 create table Inventario(
@@ -126,7 +126,7 @@ create table Zapatos(
 
 create table Formas_De_Pagos(
 	IdFormaDePago int primary key auto_increment,
-    Tipo enum('Efectivo', 'Credito', 'Devito', 'Transferencia') not null
+    Tipo enum('Efectivo', 'Credito', 'Devito', 'Transferencia','Bitcoin') not null
 );
 
 create table Detalles_De_Ventas(
@@ -168,7 +168,38 @@ create table Factura_De_Compras(
     IdFormaDePago int not null
 );
 
--- LLAVES FORANEAS DE DIRECCIONEs
+-- TABLAS DE ROLES
+create table roles(
+	IdRol int primary key auto_increment,
+    Rol varchar (50) not null
+);
+
+create table opciones(
+	IdOpcion int primary key auto_increment,
+    Opcion varchar(50) not null
+);
+
+create table asignacionRolesOpciones(
+	IdAsignacion int primary key auto_increment,
+    IdRol int not null,
+    IdOpcion int not null
+);
+
+create table usuarios (
+	Idusuario int primary key auto_increment,
+    Usuario varchar (50) not null,
+    Contrasenia varchar(50) not null,
+    IdRol int not null,
+    IdEmpleado int not null
+);
+
+-- LLAVES FORANEAS DE ROLES
+alter table asignacionRolesOpciones add foreign key (IdRol) references roles(IdRol);
+alter table asignacionRolesOpciones add foreign key (IdOpcion) references opciones(IdOpcion);
+alter table usuarios add foreign key (IdRol) references roles(IdRol);
+alter table usuarios add foreign key (IdEmpleado) references Empleados(IdEmpleado);
+
+-- LLAVES FORANEAS DE DIRECCIONES
 alter table Municipios add foreign key (IdDepartamento) references Departamentos(IdDepartamento);
 alter table Distritos add foreign key (IdMunicipio) references Municipios(IdMunicipio);
 alter table Direcciones add foreign key (IdDistrito) references Distritos(IdDistrito);
